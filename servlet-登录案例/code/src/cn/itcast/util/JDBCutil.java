@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class JDBCutil {
+    /*如果使用者为：springJDBC，其只需要datasource*/
+    //如果为其他使用者，其一般会使用连接器。
     private  static DataSource ds;
     static {
         //加载配置文件

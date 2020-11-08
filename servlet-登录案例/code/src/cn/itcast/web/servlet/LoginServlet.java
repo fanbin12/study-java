@@ -27,6 +27,8 @@ public class LoginServlet extends HttpServlet {
         user loginUser = new user();
         loginUser.setUsername(username);
         loginUser.setPassword(password);*/
+
+        //这是获取所有网页传过来的参数，以键值对的形式存在，最后将其赋值给对象
         Map<String, String[]> map = req.getParameterMap();
         user loginUser=new user();
         try {
@@ -40,7 +42,11 @@ public class LoginServlet extends HttpServlet {
             *概念：成员变量
             属性：setter和getter方法截取后的产物，去掉set和get前缀，JavaBean操作的是属性
              */
-            /*popultion会自动遍历操作属性，然后进行复赋值*/
+            /*popultion会自动遍历操作属性（user的属性），然后进行复赋值，有时需要注意传参数量，不一定
+            * 对象的每个参数都需要传进来
+            *
+            * 这要求HTML文件中name属性必须和user对象的属性一致才能进行正确赋值
+            * */
             BeanUtils.populate(loginUser,map);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -48,7 +54,7 @@ public class LoginServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-
+        //操作数据库，传递对象
         userDao log = new userDao();
         user us = log.login(loginUser);
         if(us==null){
@@ -56,8 +62,9 @@ public class LoginServlet extends HttpServlet {
         }
         else
         {
-            /*将参数放到request域中*/
+            /*将参数放到request域中，以便request域中数据共享*/
             req.setAttribute("user",us);
+            //进行逻辑跳转
             req.getRequestDispatcher("/SuccessServlet").forward(req,resp);
         }
 

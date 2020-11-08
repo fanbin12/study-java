@@ -15,6 +15,7 @@ public class userDao {
         /*快捷键：CTRL+alt+T*/
         try {
             String sql="select * from user where username=? and password=?";
+            //queryForObject会将参数带入sql，并执行，最后返回一个user对象
             user use = template.queryForObject(sql,
                     new BeanPropertyRowMapper<user>(user.class),
                     loginuser.getUsername(), loginuser.getPassword());
