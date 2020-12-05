@@ -24,6 +24,7 @@ public class HdfsApiDemo {
         InputStream inputStream = new URL("hdfs://node01:8020/a.txt").openStream();
         //获取输出流
         FileOutputStream fileOutputStream = new FileOutputStream(new File("D:\\hello.txt"));
+        //将hdfs文件复制到本地文件
         IOUtils.copy(inputStream, fileOutputStream);
         IOUtils.closeQuietly(inputStream);
         IOUtils.closeQuietly(fileOutputStream);
@@ -100,7 +101,7 @@ public class HdfsApiDemo {
         fileSystem.close();
     }
 
-    //上传wenjian
+    //上传文件
     @Test
     public void putData() throws URISyntaxException, IOException {
         FileSystem fileSystem = FileSystem.get(new URI("hdfs://node01:8020"), new Configuration());
@@ -109,12 +110,17 @@ public class HdfsApiDemo {
         fileSystem.close();
     }
 
+    //合并文件
     @Test
     public void mergeFile() throws URISyntaxException, IOException, InterruptedException {
+        //创建文件系统
         FileSystem fileSystem = FileSystem.get(new URI("hdfs://node01:8020"), new Configuration(), "root");
         FSDataOutputStream outputStream = fileSystem.create(new Path("/bigfile.txt"));
+        //创建本地文件系统
         LocalFileSystem local = FileSystem.getLocal(new Configuration());
+        //获取本地文件系统的目录
         FileStatus[] fileStatuses = local.listStatus(new Path("file:///E:"));
+        //遍历本地文件，将其传到hdfs上
         for (FileStatus fileStatus : fileStatuses) {
             FSDataInputStream inputStream = local.open(fileStatus.getPath());
             IOUtils.copy(inputStream, outputStream);
